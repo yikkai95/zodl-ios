@@ -49,6 +49,8 @@ let package = Package(
         .library(name: "OSStatusError", targets: ["OSStatusError"]),
         .library(name: "PartnerKeys", targets: ["PartnerKeys"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
+        .library(name: "PaymentURI", targets: ["PaymentURI"]),
+        .library(name: "PaymentURIFinalize", targets: ["PaymentURIFinalize"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "QRImageDetector", targets: ["QRImageDetector"]),
         .library(name: "Receive", targets: ["Receive"]),
@@ -422,6 +424,7 @@ let package = Package(
                 "Generated",
                 "Models",
                 "PartnerKeys",
+                "PaymentURIFinalize",
                 "ReviewRequest",
                 "Scan",
                 "SDKSynchronizer",
@@ -1034,6 +1037,26 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/UIComponents"
+        ),
+        .target(
+            name: "PaymentURI",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "Sources/Dependencies/PaymentURI"
+        ),
+        .target(
+            name: "PaymentURIFinalize",
+            dependencies: [
+                "DerivationTool",
+                "Models",
+                "PaymentURI",
+                "SDKSynchronizer",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
+            ],
+            path: "Sources/Features/PaymentURIFinalize"
         ),
         .target(
             name: "URIParser",

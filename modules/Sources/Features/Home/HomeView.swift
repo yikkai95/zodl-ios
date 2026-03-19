@@ -10,6 +10,7 @@ import Models
 import WalletBalances
 import Scan
 import SmartBanner
+import PaymentURIFinalize
 
 public struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -19,6 +20,7 @@ public struct HomeView: View {
 
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
+    @State private var showPaymentURIFinalize = false
 
     public init(store: StoreOf<Home>, tokenName: String) {
         self.store = store
@@ -78,6 +80,18 @@ public struct HomeView: View {
                 .padding(.top, 24)
                 .screenHorizontalPadding()
 
+                // DEBUG: Payment URI Finalize test button
+                Button("Test Payment URI Finalize") {
+                    showPaymentURIFinalize = true
+                }
+                .font(.caption)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 12)
+                .background(Color.orange)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding(.top, 8)
+
                 SmartBannerView(
                     store: store.scope(
                         state: \.smartBannerState,
@@ -105,6 +119,13 @@ public struct HomeView: View {
                         }
                     }
                 }
+            }
+            .sheet(isPresented: $showPaymentURIFinalize) {
+                PaymentURIFinalizeView(
+                    store: Store(initialState: PaymentURIFinalize.State()) {
+                        PaymentURIFinalize()
+                    }
+                )
             }
             .sheet(isPresented: $store.isInAppBrowserKeystoneOn) {
                 if let url = URL(string: store.inAppBrowserURLKeystone) {
